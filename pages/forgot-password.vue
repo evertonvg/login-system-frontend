@@ -1,25 +1,23 @@
 <template lang="pug">
 div.background-attach.h-screen.w-screen.flex.items-center.justify-end.relative
   div.flex-1.flex.items-center.justify-center.h-full
-    h1.uppercase.text-5xl.text-whiteopt.z-10.text-center Seja bem vindo
+    h1.uppercase.text-5xl.text-whiteopt.z-10.max-w-lg.text-center vamos te ajudar a resolver isso
   div.loginbox.initial.p-5.h-full.flex.flex-col.items-start-justify-start
     form.w-full(action="" method="method")
-      h1.mb-8.text-4xl LOGIN
+      Nuxt-Link(to="/")
+        div.flex.items-start.justify-start
+          double-arrow-left(title="icone de voltar")
+          span  Voltar
+      h1.mb-8.text-4xl Esqueci Minha Senha
       div.input.mb-3
         label.mb-1(for="email") E-mail
         input.rounded-lg.h-6(type="email" placeholder="insira seu email" v-model="email" :class=" $v.email.$error ? 'fail-error' : '' ")
         div.warning(v-if="!$v.email.required && $v.email.$error") Email requerido
         div.warning(v-if="!$v.email.email && $v.email.$error") Insira um email valido
-      div.input.mb-8
-        label.mb-1(for="password") Senha
-        input.rounded-lg.h-6(type="password" placeholder="insira sua senha" v-model="password" :class=" $v.password.$error ? 'fail-error' : '' ")
-        div.warning(v-if="!$v.password.required && $v.password.$error") Senha Requerida
-        div.warning(v-if="!$v.password.minLength && $v.password.$error") minimo de 6 caracteres são necessários
+      
 
-      defaultButton.mt-4( :disabledButton="disabledButton" typeButton="submit" :value="valueButton" :event="login")
-      div.mt-12.recover-register
-        Nuxt-Link(to="register") Registar
-        Nuxt-Link(to="forgot-password") Esqueci Minha Senha
+      defaultButton.mt-4( :disabledButton="disabledButton" typeButton="submit" :value="valueButton" :event="recover")
+      
 
         
 </template>
@@ -31,72 +29,60 @@ import defaultButton from '../components/default-button.vue';
 
 
 export default {
-  name: 'Login',
+  name: 'ForgetPassword',
   components:{
     'defaultButton' : defaultButton
   },
   data(){
     return{
       email:'',
-      password:'',
-      valueButton:'Logar',
-      statusLoginButton: false,
-      disabledButton:false,
+      valueButton:'Recuperar',
+      disabledButton:false
     }
   },
-  middleware: ['auth'],
+
   validations:{
     email: {required,email},
-    password: {
-      required,
-      minLength: minLength(6)
-    },
   },
   methods:{
- 
-    async login(ev){
+    async recover(ev){
       ev.preventDefault();
       if(this.$v.$invalid){
         this.$v.$touch()
         return 
       }
+      this.valueButton = 'Recuperando'
+      this.$store.dispatch('warning/setWarning','Recuperando, aguarde');
 
-      this.disabledButton = true
-      this.$store.dispatch('warning/setWarning','Autenticando...Aguarde.')
-
-      // await this.$axios.$get('http://localhost:8000/sanctum/csrf-cookie').then((resp)=>{
-      //   console.log(resp)
-      // })
-
-      await this.$auth.loginWith('laravelSanctum',{
+       await this.$axios.$get('http://localhost:8000/sanctum/csrf-cookie').then((resp)=>{
         
-         data: {
-          email: this.email,
-          password: this.password,
-        },
-        
-        }).then((res)=>{
-          this.$store.dispatch('warning/setWarning',res.data.message)
-          this.$router.push('/')
-        }).catch((err)=>{
-          this.email = ''
-          this.password = ''
-          // action 
-          this.$store.dispatch('warning/setWarning',err.response.data.message)
-          // mutation
-          // this.$store.commit('warning/setWarning','usuário ou senha inválidos')
-          this.disabledButton = false
-          
-        })
-    }
-    
+      })
+      await this.$axios.$post('http://localhost:8000/forgot-password',{
+        'email' : this.email,
+      }).
+      then((res)=>{
+        this.disabledButton = false
+        this.valueButton = 'Recuperar'
+        this.$store.dispatch('warning/setWarning',res.message)
+        this.$router.push('/')
+      }).catch((err)=>{
+        this.disabledButton = false
+        this.valueButton = 'Recuperar'
+        this.$store.dispatch('warning/setWarning',err.response.data.message)
+        this.email = ''
+      })
+
+    },
   },
-
+  mounted(){
+    this.$store.dispatch('warning/setWarning','')
+  }
+ 
 }
 </script>
 <style lang="stylus" scoped>
   .background-attach
-    background-image url('../static/img/anime-bg.jpg')
+    background-image url('../static/img/japanese-gestures-thumbs-up.webp')
     background-size: cover
     background-position: center
     background-repeat: no-repeat

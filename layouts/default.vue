@@ -1,13 +1,13 @@
 <template lang="pug">
-    div
-        transition(name="fade")
-            div.rounded-md.bg-browncolor-100.flex.items-center.justify-center.relative.warning-default(v-if="$store.state.warning.warning != ''") {{$store.state.warning.warning}}
-                span.absolute.bg-white.top-px.right-2.cursor-pointer(@click.prevent="closeWarn") X
-                
-        Header
-        transition(name="fade")
-            Nuxt
-        Footer
+div
+    transition(name="fade")
+        div.rounded-md.bg-browncolor-100.flex.items-center.justify-center.relative.z-10.px-1.py-8.text-center.warning-default(v-if="$store.state.warning.warning != ''") {{$store.state.warning.warning}}
+            span.absolute.bg-white.top-px.right-2.cursor-pointer(@click.prevent="closeWarn") X
+            
+    Header
+    transition(name="fade")
+        Nuxt
+    Footer
 </template>
 
 <script>
@@ -57,7 +57,7 @@ export default {
     .warning-default
         color white
         width 300px
-        height 50px
+        min-height 50px
         position fixed
         top 100px
         left 50%

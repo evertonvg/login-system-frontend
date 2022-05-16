@@ -1,38 +1,38 @@
 <template lang="pug">
-  div.background-attach.h-screen.w-screen.flex.items-center.justify-end.relative
-    div.flex-1.flex.items-center.justify-center.h-full
-      h1.uppercase.text-5xl.text-whiteopt.z-10.text-center Venha fazer parte dessa comunidade
-    div.loginbox.initial.p-5.h-full.flex.flex-col.items-start-justify-start
-      form.w-full(action="" method="method")
-        Nuxt-Link(to="/")
-          div.flex.items-start.justify-start
-            double-arrow-left(title="icone de voltar")
-            span  Voltar
-        h1.mb-8.text-4xl REGISTRAR
-        div.input.mb-3
-          label.mb-1(for="nome") Nome
-          input.rounded-lg.h-6(type="email" placeholder="insira seu nome" v-model="nome" :class=" $v.nome.$error ? 'fail-error' : '' ")
-          div.warning(v-if="!$v.nome.required && $v.nome.$error") Nome requerido
+div.background-attach.h-screen.w-screen.flex.items-center.justify-end.relative
+  div.flex-1.flex.items-center.justify-center.h-full
+    h1.uppercase.text-5xl.text-whiteopt.z-10.text-center Venha fazer parte dessa comunidade
+  div.loginbox.initial.p-5.h-full.flex.flex-col.items-start-justify-start
+    form.w-full(action="" method="method")
+      Nuxt-Link(to="/")
+        div.flex.items-start.justify-start
+          double-arrow-left(title="icone de voltar")
+          span  Voltar
+      h1.mb-8.text-4xl REGISTRAR
+      div.input.mb-3
+        label.mb-1(for="nome") Nome
+        input.rounded-lg.h-6(type="email" placeholder="insira seu nome" v-model="nome" :class=" $v.nome.$error ? 'fail-error' : '' ")
+        div.warning(v-if="!$v.nome.required && $v.nome.$error") Nome requerido
 
-        div.input.mb-3
-          label.mb-1(for="email") E-mail
-          input.rounded-lg.h-6(type="email" placeholder="insira seu email" v-model="email" :class=" $v.email.$error ? 'fail-error' : '' ")
-          div.warning(v-if="!$v.email.required && $v.email.$error") Email requerido
-          div.warning(v-if="!$v.email.email && $v.email.$error") Insira um email valido
+      div.input.mb-3
+        label.mb-1(for="email") E-mail
+        input.rounded-lg.h-6(type="email" placeholder="insira seu email" v-model="email" :class=" $v.email.$error ? 'fail-error' : '' ")
+        div.warning(v-if="!$v.email.required && $v.email.$error") Email requerido
+        div.warning(v-if="!$v.email.email && $v.email.$error") Insira um email valido
 
-        div.input.mb-3
-          label.mb-1(for="password") Senha
-          input.rounded-lg.h-6(type="password" placeholder="insira sua senha" v-model="password" :class=" $v.password.$error ? 'fail-error' : '' ")
-          div.warning(v-if="!$v.password.required && $v.password.$error") Senha Requerida
-          div.warning(v-if="!$v.password.minLength && $v.password.$error") minimo de 6 caracteres são necessários
-          
+      div.input.mb-3
+        label.mb-1(for="password") Senha
+        input.rounded-lg.h-6(type="password" placeholder="insira sua senha" v-model="password" :class=" $v.password.$error ? 'fail-error' : '' ")
+        div.warning(v-if="!$v.password.required && $v.password.$error") Senha Requerida
+        div.warning(v-if="!$v.password.minLength && $v.password.$error") minimo de 6 caracteres são necessários
         
-        div.input.mb-2
-          label.mb-1(for="password") Repita a senha
-          input.rounded-lg.h-6(type="password" placeholder="Repita sua senha" v-model="passwordRepeat" :class=" $v.passwordRepeat.$error ? 'fail-error' : '' ")
-          div.warning(v-if="!$v.passwordRepeat.sameAs && $v.passwordRepeat.$error") As senhas não batem
+      
+      div.input.mb-2
+        label.mb-1(for="password") Repita a senha
+        input.rounded-lg.h-6(type="password" placeholder="Repita sua senha" v-model="passwordRepeat" :class=" $v.passwordRepeat.$error ? 'fail-error' : '' ")
+        div.warning(v-if="!$v.passwordRepeat.sameAs && $v.passwordRepeat.$error") As senhas não batem
 
-        defaultButton.mt-4(:disabledButton="disabledButton" typeButton="submit" :valueButton="valueButton" :event="register")
+      defaultButton.mt-4(:disabledButton="disabledButton" typeButton="submit" :valueButton="valueButton" :event="register")
 
         
 </template>
@@ -78,7 +78,7 @@ export default {
         this.$v.$touch()
         return 
       }
-
+      this.$store.dispatch('warning/setWarning','Registrando, aguarde...')
       this.valueButton = 'Registrando'
       this.disabledButton = true
       
@@ -131,7 +131,7 @@ export default {
     
   },
   mounted(){
- 
+    this.$store.dispatch('warning/setWarning','')
   
     
   }
